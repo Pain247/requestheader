@@ -3,7 +3,10 @@ var app = express();
 var ip= require('os').networkInterfaces();
 app.listen(process.env.PORT);
 app. get('/whoami', function(req,res){
-       var ipaddress = getIP();
+       var ipaddress = req.headers['x-forwarded-for'] || 
+     req.connection.remoteAddress || 
+     req.socket.remoteAddress ||
+     req.connection.socket.remoteAddress;
        var info = {
            'ipaddress': ipaddress,
            'language': req.headers["accept-language"].split(',')[0],
@@ -13,15 +16,4 @@ app. get('/whoami', function(req,res){
 
 
 });
-function getIP() {
-    for (var comp in ip) {
-       var temp = ip[comp];
-    for (var j = 0; j < temp.length; j++) {
-      var a = temp[j];
-      if (a.family === 'IPv4' && a.address !== '127.0.0.1' && !a.internal)
-        return a.address;
-    }
-  }
 
-  return '0.0.0.0';
-}
