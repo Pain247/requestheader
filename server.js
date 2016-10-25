@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 var ip= require('os').networkInterfaces();
-app.listen(8000);
+app.listen(process.env.PORT);
 app. get('/whoami', function(req,res){
        var ipaddress = getIP();
        var info = {
